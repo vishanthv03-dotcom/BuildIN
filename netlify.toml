@@ -1,0 +1,61 @@
+# Netlify Configuration for Builden Next.js Frontend
+# This file configures how Netlify builds and deploys your Next.js app
+
+[build]
+  # Command to build the Next.js application
+  command = "npm run build"
+  
+  # Directory where build output is stored
+  publish = ".next"
+  
+  # Node.js version to use during build
+  node_version = "20.10.0"
+
+# Production environment variables
+[context.production.environment]
+  # Supabase Configuration (Production)
+  NEXT_PUBLIC_SUPABASE_URL = "your_supabase_url_here"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your_supabase_anon_key_here"
+  
+  # Auth Callback URL for Production
+  NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL = "https://your-netlify-domain.netlify.app/auth/callback"
+
+# Preview (staging) environment variables
+[context.deploy-preview.environment]
+  # Supabase Configuration (Preview/Staging)
+  NEXT_PUBLIC_SUPABASE_URL = "your_supabase_url_here"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your_supabase_anon_key_here"
+  
+  # Auth Callback URL for Preview Deployments
+  NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL = "https://deploy-preview-*.netlify.app/auth/callback"
+
+# Development environment variables
+[context.branch-deploy.environment]
+  # Supabase Configuration (Development)
+  NEXT_PUBLIC_SUPABASE_URL = "your_supabase_url_here"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your_supabase_anon_key_here"
+
+# Redirects and rewrites
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers configuration
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+# Cache configuration for static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Plugins (optional - uncomment if needed)
+# [[plugins]]
+#   package = "@netlify/plugin-nextjs"
